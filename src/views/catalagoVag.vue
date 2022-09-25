@@ -1,0 +1,125 @@
+<script>
+import axios from "axios";
+import { onBeforeMount } from "vue";
+// import { onBeforeMount, reactive } from "vue";
+
+import CardProcurado from "../components/CardProcurado.vue";
+
+export default {
+  components: { CardProcurado },
+  data() {
+    return {
+      data: [],
+    };
+  },
+  async created() {
+    const { data } = await axios.get("https://api.fbi.gov/wanted/v1/list");
+    this.data = data.items;
+
+  },
+};
+// let data = reactive([])
+// onBeforeMount(() => {
+// })
+</script>
+<template>
+  <div class="main">
+    <div class="lista">
+      <h2 class="txtprin">Mais Procurados</h2>
+      <hr />
+      <div class="categorias">
+        <router-link class="link" to="/cadavag">
+          <span>Terrorismo</span>
+        </router-link>
+        <span>Fugitivos</span>
+        <span>Desaparecidos</span>
+      </div>
+    </div>
+    <div class="card" >
+      <div v-for="procurado of data">
+      <router-link class="router" :to="{name: 'cadaVag', params: {id: procurado.uid }}">
+      <card-procurado
+        :key="procurado.uid"
+        :procurado="procurado"
+      />
+      </router-link>
+      </div>
+    </div>
+  </div>
+</template>
+<style>
+.card {
+  padding: 6%;
+  margin-left: 4%;
+  display: flex;
+  flex-wrap: wrap;
+
+}
+.router {
+  display: flex;
+  flex-wrap: wrap;
+  color: #0a0a12;
+}
+.name {
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 15%;
+  width: 177px;
+}
+
+.onecard {
+  font-size: 15px;
+  background-color: rgb(240, 240, 240);
+  border-radius: 15px;
+  width: 210px;
+  height: 370px;
+  padding: 15px;
+  margin: 0px 30px 60px 30px;
+  box-shadow: 0px 0px 10px 0 rgba(0, 0, 0, 0.438);
+}
+.onecard:hover {
+  transform: scale(1.1);
+  transition: 0.45s;
+  background-color: rgb(222, 222, 223);
+}
+.onecard:hover {
+  box-shadow: 0px 0px 50px 0 rgba(0, 0, 0, 0.438);
+}
+.onecard img {
+  display: flex;
+  width: 22px;
+  border-radius: 15px;
+  width: 100%;
+  height: 75%;
+}
+
+.txtprin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.5%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  color: #0a0a12;
+  font-size: 2em;
+  margin-right: 14.5%;
+}
+
+.link a {
+  text-decoration: none;
+  color: #0a0a12;
+}
+
+.categorias {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.categorias a {
+  color: black;
+}
+
+.categorias span {
+  margin: 0 4%;
+}
+</style>
