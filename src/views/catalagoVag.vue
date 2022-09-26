@@ -62,7 +62,7 @@ export default {
 }
 .name {
   font-family: Arial, Helvetica, sans-serif;
-  margin-top: 15%;
+
   width: 177px;
 }
 
