@@ -1,3 +1,17 @@
+<script>
+import { mapActions, mapState, mapStores } from "pinia";
+import { useSearchStore } from "@/stores/search";
+
+export default {
+  computed: {
+    ...mapStores(useSearchStore),
+    ...mapState(useSearchStore, ["searchText"]),
+  },
+  methods: {
+    ...mapActions(useSearchStore, ["changeSearchText"]),
+  },
+};
+</script>
 <template>
   <header>
     <div class="header"></div>
@@ -10,7 +24,12 @@
       </a>
     </div>
     <div class="submit-line">
-      <input type="text" placeholder="Pesquisar FBI" />
+      <input
+        type="text"
+        placeholder="Pesquisar FBI"
+        :value="searchText"
+        @keyup="changeSearchText"
+      />
       <button class="submit-lente" type="submit">
         <i class="fa fa-search"></i>
       </button>
@@ -25,6 +44,9 @@
 }
 a {
   text-decoration: none;
+}
+.fa-search {
+  cursor: pointer;
 }
 .submit-lente {
   position: absolute;

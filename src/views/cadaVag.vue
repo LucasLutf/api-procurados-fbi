@@ -19,11 +19,11 @@ export default {
     );
     this.data = data;
   },
-  // props: {
-  //     procurado: {
-  //         type: Object
-  //     }
-  // }
+    props: {
+      cardsearch: {
+          type: Object
+      }
+  }
 };
 </script>
 <template>
@@ -36,12 +36,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 1.5%;
+  margin-top: 2%;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   color: #0a0a12;
   font-size: 2em;
-  margin-right: 14.5%;
 }
 
 .categorias {

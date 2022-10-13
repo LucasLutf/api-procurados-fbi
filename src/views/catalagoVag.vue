@@ -1,7 +1,8 @@
 <script>
 import axios from "axios";
 import { onBeforeMount } from "vue";
-// import { onBeforeMount, reactive } from "vue";
+import { mapActions, mapState, mapStores } from "pinia";
+import { useSearchStore } from "@/stores/search";
 
 import CardProcurado from "../components/CardProcurado.vue";
 
@@ -10,39 +11,39 @@ export default {
   data() {
     return {
       data: [],
+      search: "",
     };
   },
   async created() {
     const { data } = await axios.get("https://api.fbi.gov/wanted/v1/list");
     this.data = data.items;
-
+  },
+  computed: {
+    ...mapStores(useSearchStore),
+    ...mapState(useSearchStore, ["searchText"]),
+    filteredPosts() {
+      return this.procurado.filter((cardsearch) =>
+        cardsearch.items.toLowerCase().includes(this.search.toLowerCase())
+      );
+    },
   },
 };
-// let data = reactive([])
-// onBeforeMount(() => {
-// })
 </script>
 <template>
   <div class="main">
     <div class="lista">
-      <h2 class="txtprin">Mais Procurados</h2>
+      <h2 class="txtprin">Procurados</h2>
       <hr />
-      <div class="categorias">
-        <router-link class="link" to="/cadavag">
-          <span>Terrorismo</span>
-        </router-link>
-        <span>Fugitivos</span>
-        <span>Desaparecidos</span>
-      </div>
+      <h3>Filtrar: {{ searchText }}</h3>
     </div>
-    <div class="card" >
-      <div v-for="procurado of data">
-      <router-link class="router" :to="{name: 'cadaVag', params: {id: procurado.uid }}">
-      <card-procurado
-        :key="procurado.uid"
-        :procurado="procurado"
-      />
-      </router-link>
+    <div class="card">
+      <div v-for="procurado of data" :key="procurado.uid">
+        <router-link
+          class="router"
+          :to="{ name: 'cadaVag', params: { id: procurado.uid } }"
+        >
+          <card-procurado :key="procurado.uid" :procurado="procurado" />
+        </router-link>
       </div>
     </div>
   </div>
@@ -53,7 +54,6 @@ export default {
   margin-left: 4%;
   display: flex;
   flex-wrap: wrap;
-
 }
 .router {
   display: flex;
@@ -96,12 +96,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 1.5%;
+  margin-top: 2%;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   color: #0a0a12;
   font-size: 2em;
-  margin-right: 14.5%;
 }
 
 .link a {
